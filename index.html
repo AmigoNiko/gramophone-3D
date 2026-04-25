@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
+  <title>Gramophone — an interactive 3D experience</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+  <!-- LOADING SCREEN -->
+  <div id="loading">
+    <div class="inner">
+      <div class="ring"></div>
+      <div class="title">Loading gramophone…</div>
+      <div class="sub">Warming the tubes</div>
+    </div>
+  </div>
+
+  <!-- UI OVERLAYS -->
+  <div id="ui">
+
+    <div id="nowPlaying">
+      <div class="eyebrow">Now Playing</div>
+      <div class="diskTitle" id="npTitle">—</div>
+      <div class="artist" id="npArtist">—</div>
+      <div class="sep"></div>
+      <div class="track" id="npTrack">—</div>
+      <div class="trackNum" id="npTrackNum">—</div>
+    </div>
+
+    <div id="transport">
+      <button class="tbtn" id="prevBtn" title="Previous track">&#9664;&#9664;</button>
+      <button class="tbtn play" id="playBtn" title="Play / Pause">&#9658;</button>
+      <button class="tbtn" id="nextBtn" title="Next track">&#9654;&#9654;</button>
+      <div id="transportTrack">
+        <span id="ttTitle">—</span>
+        <span class="num" id="ttNum">—</span>
+      </div>
+    </div>
+
+    <div id="volume" class="hidden">
+      <div id="volIcon">VOL</div>
+      <button class="vbtn" id="volDown" title="Volume down">−</button>
+      <div id="volBar"><div id="volFill"></div><div id="volThumb"></div></div>
+      <button class="vbtn" id="volUp" title="Volume up">+</button>
+      <div id="volLabel">75%</div>
+    </div>
+
+    <button id="addBtn" title="Craft your own record"><span>+</span></button>
+
+    <div id="ytNotice">YouTube unavailable — visuals only</div>
+
+    <div id="powerIndicator" aria-live="polite" title="Toggle from the power button on the gramophone">
+      <span class="dot"></span>
+      <span class="label">Power <span id="powerState">off</span></span>
+      <span class="hint">press button</span>
+    </div>
+
+    <!-- AUTH PANEL (sign in with Google) -->
+    <div id="authPanel">
+      <div id="authSignedOut">
+        <button id="signInBtn" title="Sign in with your Google account">
+          <span class="g"></span>
+          Sign in with Google
+        </button>
+      </div>
+      <div id="authSignedIn">
+        <img id="authAvatar" alt="" />
+        <span id="authName">—</span>
+        <button id="signOutBtn" title="Sign out">Sign out</button>
+      </div>
+      <div id="authError" role="alert"></div>
+    </div>
+
+    <!-- SHELF SECTION TABS (visible only when signed in) -->
+    <div id="shelfTabs" role="tablist">
+      <button data-section="albums" class="active">My Albums</button>
+      <button data-section="suggestions">Suggestions</button>
+      <button data-section="search">Search</button>
+    </div>
+
+    <!-- SEARCH PANEL (opens from Search tab / + button when signed in) -->
+    <div id="searchPanel" role="dialog" aria-label="Search YouTube">
+      <div class="hdr">Search YouTube</div>
+      <form id="searchForm">
+        <input id="searchInput" type="text" autocomplete="off" placeholder="Artist, song, album…" />
+        <button id="searchGo" type="submit">Go</button>
+      </form>
+      <div class="hint">Results appear on the shelf below. Click a record to drop it on the platter.</div>
+    </div>
+
+    <div id="lidNotice"><span class="accent">Open the lid</span>&nbsp;&nbsp;to play a record</div>
+    <div id="powerNotice"><span class="accent">Press the power button</span>&nbsp;&nbsp;to start</div>
+
+    <div id="dropHint">Drop on the platter</div>
+
+    <div id="shelf"></div>
+
+  </div>
+
+  <!-- MODAL (craft your record) -->
+  <div id="modal" aria-hidden="true">
+    <div id="modalCard">
+      <button id="modalClose" aria-label="Close">×</button>
+      <h2>Craft Your Record</h2>
+      <div class="sub">Pressed to order</div>
+
+      <label for="mTitle">Disk Title *</label>
+      <input id="mTitle" type="text" maxlength="40" placeholder="Untitled Sessions" />
+
+      <label for="mArtist">Artist Name</label>
+      <input id="mArtist" type="text" maxlength="40" placeholder="Various Artists" />
+
+      <label for="mColor">Label Color</label>
+      <input id="mColor" type="color" value="#8B1A1A" />
+
+      <label>Tracks (up to 6)</label>
+      <div id="slots"></div>
+
+      <div id="modalActions">
+        <button class="btn" id="cancelBtn">Cancel</button>
+        <button class="btn primary" id="saveBtn">Press Record</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden YouTube player mount -->
+  <div id="yt"></div>
+
+  <!-- LIBRARIES (must load before src/app.js) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+
+  <!-- Main gramophone app (classic script; uses THREE globals above) -->
+  <script src="./src/app.js"></script>
+
+  <!-- YouTube / Google sign-in integration (ES module) -->
+  <script type="module" src="./src/bootstrap.js"></script>
+</body>
+</html>

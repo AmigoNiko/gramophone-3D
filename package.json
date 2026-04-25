@@ -1,0 +1,15 @@
+{
+  "name": "gramophone-3d",
+  "version": "1.0.0",
+  "description": "A photorealistic, interactive 3D gramophone music player with YouTube / Google sign-in.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/write-config.mjs",
+    "dev": "npx --yes serve@14 . -l 5500 --cors",
+    "start": "npx --yes serve@14 . -l 5500 --cors"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
